@@ -175,7 +175,6 @@ jobs:
           mkdir -p $TEMP_DIR/src/ot
           mkdir -p $TEMP_DIR/src/secops
           mkdir -p $TEMP_DIR/src/sase
-          mkdir -p $TEMP_DIR/src/ai
           mkdir -p $TEMP_DIR/build/
           mkdir -p $TEMP_DIR/site
           chmod -R 777 $TEMP_DIR
@@ -235,14 +234,6 @@ jobs:
           path: ${{ env.TEMP_DIR }}/src/lanedge
           fetch-depth: 0
 
-      - name: Clone ai
-        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
-        with:
-          repository: ${{ github.repository_owner }}/ai
-          token: ${{ secrets.PAT }}
-          path: ${{ env.TEMP_DIR }}/src/ai
-          fetch-depth: 0
-
       - name: Build HTML
         shell: bash
         run: |
@@ -275,14 +266,10 @@ jobs:
           docker run --rm --user $(id -u):$(id -g) -e MKDOCS_HOMEPAGE="https://docs.${{ vars.DNS_ZONE }}" -e MKDOCS_SITE_NAME="Lan Edge Hands on Labs" -e MKDOCS_SITE_URL="https://docs.${{ vars.DNS_ZONE }}/lanedge/" -e MKDOCS_EXPORTER_PDF_ENABLED="false" -e PLAYWRIGHT_BROWSERS_PATH="/ms-playwright" -v $TEMP_DIR/src/lanedge:/tmp/docs -v $TEMP_DIR/site/:/tmp/site/ ${{ vars.MKDOCS_REPO_NAME }} build -c
           mv $TEMP_DIR/site/rendered $TEMP_DIR/build/site/lanedge
 
-          cp -a $TEMP_DIR/src/theme $TEMP_DIR/src/ai/
-          mv $TEMP_DIR/src/ai/theme/partials/tabs-ai.html $TEMP_DIR/src/ai/theme/partials/tabs.html
-          docker run --rm --user $(id -u):$(id -g) -e MKDOCS_HOMEPAGE="https://docs.${{ vars.DNS_ZONE }}" -e MKDOCS_SITE_NAME="AI Hands on Labs" -e MKDOCS_SITE_URL="https://docs.${{ vars.DNS_ZONE }}/ai/" -e MKDOCS_EXPORTER_PDF_ENABLED="false" -e PLAYWRIGHT_BROWSERS_PATH="/ms-playwright" -v $TEMP_DIR/src/ai:/tmp/docs -v $TEMP_DIR/site/:/tmp/site/ ${{ vars.MKDOCS_REPO_NAME }} build -c
-          mv $TEMP_DIR/site/rendered $TEMP_DIR/build/site/ai
 
       - name: Create PDF
         run: |
-          TARGET_DIRS=("cloud" "ot" "secops" "sase" "lanedge" "ai")
+          TARGET_DIRS=("cloud" "ot" "secops" "sase" "lanedge")
           for target in "${TARGET_DIRS[@]}"; do
             TARGET_DIR="$TEMP_DIR/src/${target}/"
             find "$TARGET_DIR" -mindepth 1 -maxdepth 1 -type d ! -name ".vscode" ! -name "theme" ! -name ".git" ! -name ".github" ! -name "images" | while read -r folder; do
