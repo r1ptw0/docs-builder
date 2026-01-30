@@ -190,9 +190,9 @@ jobs:
       - name: Clone Landing Page
         uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
         with:
-          repository: ${{ github.repository_owner }}/landing-page
+          repository: ${{ github.repository_owner }}/landing-page-2025
           token: ${{ secrets.PAT }} 
-          path: ${{ env.TEMP_DIR }}/src/landing-page
+          path: ${{ env.TEMP_DIR }}/src/landing-page-2025
           fetch-depth: 0
 
       - name: Clone cloud
@@ -246,8 +246,8 @@ jobs:
       - name: Build HTML
         shell: bash
         run: |
-          cp -a $TEMP_DIR/src/theme $TEMP_DIR/src/landing-page/
-          docker run --rm --user $(id -u):$(id -g) -e MKDOCS_SITE_DIR="site/rendered" -e MKDOCS_HOMEPAGE="https://docs.${{ vars.DNS_ZONE }}" -e MKDOCS_SITE_NAME="Hands on Labs" -e MKDOCS_EXPORTER_PDF_ENABLED="false" -v $TEMP_DIR/src/landing-page:/tmp/docs -v $TEMP_DIR/site/:/tmp/site/ ${{ vars.MKDOCS_REPO_NAME }} build
+          cp -a $TEMP_DIR/src/theme $TEMP_DIR/src/landing-page-2025/
+          docker run --rm --user $(id -u):$(id -g) -e MKDOCS_SITE_DIR="site/rendered" -e MKDOCS_HOMEPAGE="https://docs.${{ vars.DNS_ZONE }}" -e MKDOCS_SITE_NAME="Hands on Labs" -e MKDOCS_EXPORTER_PDF_ENABLED="false" -v $TEMP_DIR/src/landing-page-2025:/tmp/docs -v $TEMP_DIR/site/:/tmp/site/ ${{ vars.MKDOCS_REPO_NAME }} build
           mv $TEMP_DIR/site/rendered/ $TEMP_DIR/build/site
 
           cp -a $TEMP_DIR/src/theme $TEMP_DIR/src/cloud/
