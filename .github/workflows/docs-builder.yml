@@ -276,7 +276,7 @@ jobs:
           mv $TEMP_DIR/site/rendered $TEMP_DIR/build/site/lanedge
 
           cp -a $TEMP_DIR/src/theme $TEMP_DIR/src/ai/
-          mv $TEMP_DIR/src/ai/theme/partials/tabs-ai.html $TEMP_DIR/src/ai/theme/partials/tabs.html
+#         mv $TEMP_DIR/src/ai/theme/partials/tabs-ai.html $TEMP_DIR/src/ai/theme/partials/tabs.html
           docker run --rm --user $(id -u):$(id -g) -e MKDOCS_HOMEPAGE="https://docs.${{ vars.DNS_ZONE }}" -e MKDOCS_SITE_NAME="AI Hands on Labs" -e MKDOCS_SITE_URL="https://docs.${{ vars.DNS_ZONE }}/ai/" -e MKDOCS_EXPORTER_PDF_ENABLED="false" -e PLAYWRIGHT_BROWSERS_PATH="/ms-playwright" -v $TEMP_DIR/src/ai:/tmp/docs -v $TEMP_DIR/site/:/tmp/site/ ${{ vars.MKDOCS_REPO_NAME }} build -c
           mv $TEMP_DIR/site/rendered $TEMP_DIR/build/site/ai
 
